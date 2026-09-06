@@ -1,0 +1,155 @@
+{
+  "description": "币种名称到 ISO 4217 三位代码的映射配置",
+  "version": "1.0.0",
+  "last_updated": "2026-06-08",
+  "mappings": {
+    "美元": "USD",
+    "美金": "USD",
+    "USD": "USD",
+    "US$": "USD",
+    "美金元": "USD",
+    "美元元": "USD",
+    "US Dollar": "USD",
+    "US dollar": "USD",
+    "United States Dollar": "USD",
+    "$": "USD",
+
+    "人民币": "CNY",
+    "人民币元": "CNY",
+    "CNY": "CNY",
+    "￥": "CNY",
+    "¥": "CNY",
+    "RMB": "CNY",
+    "rmb": "CNY",
+    "元": "CNY",
+    "Chinese Yuan": "CNY",
+    "CNY 元": "CNY",
+
+    "欧元": "EUR",
+    "EUR": "EUR",
+    "€": "EUR",
+    "Euro": "EUR",
+    "euro": "EUR",
+
+    "日元": "JPY",
+    "JPY": "JPY",
+    "日本元": "JPY",
+    "Japanese Yen": "JPY",
+    "円": "JPY",
+
+    "英镑": "GBP",
+    "GBP": "GBP",
+    "£": "GBP",
+    "British Pound": "GBP",
+    "Pound": "GBP",
+
+    "港元": "HKD",
+    "港币": "HKD",
+    "HKD": "HKD",
+    "HK$": "HKD",
+    "Hong Kong Dollar": "HKD",
+
+    "新元": "SGD",
+    "新加坡元": "SGD",
+    "SGD": "SGD",
+    "S$": "SGD",
+    "Singapore Dollar": "SGD",
+
+    "韩元": "KRW",
+    "韩国元": "KRW",
+    "KRW": "KRW",
+    "₩": "KRW",
+    "South Korean Won": "KRW",
+
+    "泰铢": "THB",
+    "THB": "THB",
+    "฿": "THB",
+    "Thai Baht": "THB",
+
+    "加元": "CAD",
+    "加拿大元": "CAD",
+    "CAD": "CAD",
+    "C$": "CAD",
+    "Canadian Dollar": "CAD",
+
+    "澳元": "AUD",
+    "澳大利亚元": "AUD",
+    "AUD": "AUD",
+    "Australian Dollar": "AUD",
+
+    "瑞士法郎": "CHF",
+    "CHF": "CHF",
+    "Swiss Franc": "CHF",
+
+    "卢比": "INR",
+    "印度卢比": "INR",
+    "INR": "INR",
+    "₹": "INR",
+    "Indian Rupee": "INR",
+
+    "墨西哥比索": "MXN",
+    "MXN": "MXN",
+    "Mexican Peso": "MXN",
+
+    "巴西雷亚尔": "BRL",
+    "BRL": "BRL",
+    "Brazilian Real": "BRL",
+
+    "俄罗斯卢布": "RUB",
+    "RUB": "RUB",
+    "₽": "RUB",
+    "Russian Ruble": "RUB",
+
+    "南非兰特": "ZAR",
+    "ZAR": "ZAR",
+    "South African Rand": "ZAR",
+
+    "土耳其里拉": "TRY",
+    "TRY": "TRY",
+    "₺": "TRY",
+    "Turkish Lira": "TRY",
+
+    "菲律宾比索": "PHP",
+    "PHP": "PHP",
+    "Philippine Peso": "PHP",
+
+    "马来西亚林吉特": "MYR",
+    "MYR": "MYR",
+    "Malaysian Ringgit": "MYR",
+
+    "印度尼西亚卢比": "IDR",
+    "IDR": "IDR",
+    "Indonesian Rupiah": "IDR",
+
+    "越南盾": "VND",
+    "VND": "VND",
+    "Vietnamese Dong": "VND",
+
+    "巴基斯坦卢比": "PKR",
+    "PKR": "PKR",
+    "Pakistani Rupee": "PKR",
+
+    "孟加拉塔卡": "BDT",
+    "BDT": "BDT",
+    "Bangladeshi Taka": "BDT",
+
+    "斯里兰卡卢比": "LKR",
+    "LKR": "LKR",
+    "Sri Lankan Rupee": "LKR"
+  },
+  "iso_4217_codes": {
+    "USD": {"name": "United States Dollar", "symbol": "$", "Chinese": "美元"},
+    "CNY": {"name": "Chinese Yuan", "symbol": "¥", "Chinese": "人民币"},
+    "EUR": {"name": "Euro", "symbol": "€", "Chinese": "欧元"},
+    "JPY": {"name": "Japanese Yen", "symbol": "¥", "Chinese": "日元"},
+    "GBP": {"name": "British Pound", "symbol": "£", "Chinese": "英镑"},
+    "HKD": {"name": "Hong Kong Dollar", "symbol": "HK$", "Chinese": "港元"},
+    "SGD": {"name": "Singapore Dollar", "symbol": "S$", "Chinese": "新元"},
+    "KRW": {"name": "South Korean Won", "symbol": "₩", "Chinese": "韩元"},
+    "THB": {"name": "Thai Baht", "symbol": "฿", "Chinese": "泰铢"},
+    "CAD": {"name": "Canadian Dollar", "symbol": "C$", "Chinese": "加元"},
+    "AUD": {"name": "Australian Dollar", "symbol": "A$", "Chinese": "澳元"},
+    "CHF": {"name": "Swiss Franc", "symbol": "Fr", "Chinese": "瑞士法郎"},
+    "INR": {"name": "Indian Rupee", "symbol": "₹", "Chinese": "卢比"}
+  }
+}

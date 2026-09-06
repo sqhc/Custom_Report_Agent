@@ -1,0 +1,110 @@
+# 表格提取工具可调参数配置
+
+# ============================================================================
+# CLI 命令行参数 (tools/extract_table.py)
+# ============================================================================
+cli:
+  # --input, -i: 输入文件路径或 URL (与 --config 二选一)
+  input: null
+
+  # --output, -o: 输出目录 (默认：output)
+  output: "output"
+
+  # --mapping, -m: 列映射 JSON 字符串，格式：{"目标列名": "源列名"}
+  mapping: null
+
+  # --config, -c: 配置文件路径 (JSON 格式)
+  config: null
+
+  # --max-rows: HTML 中显示的最大行数 (默认：100)
+  max_rows: 100
+
+  # --open: 生成后自动打开 HTML 文件 (默认：false)
+  open: false
+
+  # --quiet, -q: 静默模式，仅输出 JSON 结果 (默认：false)
+  quiet: false
+
+# ============================================================================
+# create_extraction_workflow() 函数参数 (agents/table_extractor.py:391)
+# ============================================================================
+workflow:
+  # input_path: 输入文件路径或 URL
+  input_path: null
+
+  # column_mapping: 列映射 {目标列名：源列名/提取规则}
+  column_mapping: {}
+
+  # output_dir: 输出目录 (默认：extraction_results)
+  output_dir: "extraction_results"
+
+  # file_type: 文件类型 'pdf'/'excel'/'word'/'web' (None 自动检测)
+  file_type: null
+
+# ============================================================================
+# 数据源提取方法特有参数
+# ============================================================================
+data_sources:
+  # extract_from_excel() 参数
+  excel:
+    # sheet_name: 工作表名称 (None 读取第一个工作表)
+    sheet_name: null
+
+  # extract_from_web() 参数
+  web:
+    # css_selector: 表格 CSS 选择器 (默认："table")
+    css_selector: "table"
+
+  # extract_from_pdf() 参数
+  pdf: {}
+
+  # extract_from_word() 参数 (框架待填充)
+  word: {}
+
+# ============================================================================
+# HTML 视图生成参数 (generate_comparison_html())
+# ============================================================================
+html:
+  # max_rows: 最大显示行数 (默认：100)
+  max_rows: 100
+
+  # output_path: HTML 输出文件路径
+  output_path: null
+
+# ============================================================================
+# 配置文件 JSON 结构示例 (用于 --config 参数)
+# ============================================================================
+json_config_example:
+  input: "data/sample_report.xlsx"
+  output_dir: "output/table_results"
+  file_type: "excel"
+  max_rows: 100
+  column_mapping:
+    姓名：姓名列
+    年龄：年龄列
+    城市：城市列
+
+# ============================================================================
+# 使用示例
+# ============================================================================
+usage_examples:
+  cli_mode: |
+    python tools/extract_table.py \
+      --input data/report.xlsx \
+      --mapping '{"name":"姓名","age":"年龄"}' \
+      --output output/results \
+      --max-rows 200 \
+      --open
+
+  config_file_mode: |
+    python tools/extract_table.py --config config/table_extraction_config.json
+
+  python_api: |
+    from agents.table_extractor import create_extraction_workflow
+
+    result = create_extraction_workflow(
+        input_path="data/report.xlsx",
+        column_mapping={"name": "姓名"},
+        output_dir="output",
+        file_type="excel"
+    )

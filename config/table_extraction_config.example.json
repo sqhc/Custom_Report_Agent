@@ -1,0 +1,12 @@
+{
+  "description": "表格提取工具配置文件示例 - 展示所有可调参数",
+  "input": "data/sample_report.xlsx",
+  "output_dir": "output/table_results",
+  "file_type": "excel",
+  "max_rows": 100,
+  "column_mapping": {
+    "姓名": "姓名列",
+    "年龄": "年龄列",
+    "城市": "城市列"
+  }
+}

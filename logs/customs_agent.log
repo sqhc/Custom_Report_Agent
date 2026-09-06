@@ -1,0 +1,327 @@
+2026-06-05 08:09:45 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-05 08:09:45 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-05 08:09:45 - src.agent.coordinator - INFO - 开始加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv
+2026-06-05 08:09:45 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:4, 列数:14
+2026-06-05 08:09:45 - src.agent.coordinator - INFO - AI 分析数据中...
+2026-06-05 08:09:45 - src.agent.reasoning - ERROR - AI 聊天失败：Client.chat() got an unexpected keyword argument 'timeout'
+2026-06-05 08:09:45 - src.agent.coordinator - INFO - AI 分析结果：分析失败
+2026-06-05 08:09:45 - src.agent.coordinator - INFO - 解析数据中...
+2026-06-05 08:09:45 - src.agent.coordinator - INFO - 验证数据中...
+2026-06-05 08:09:45 - src.data.validator - INFO - 验证完成：8 个错误，0 个警告
+2026-06-05 08:09:45 - src.agent.reasoning - ERROR - AI 聊天失败：Client.chat() got an unexpected keyword argument 'timeout'
+2026-06-05 08:09:45 - src.agent.coordinator - ERROR - 处理文件失败：'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "/Users/shenqing/Desktop/custom_agent_project/src/agent/coordinator.py", line 105, in process_file
+    logger.info(f"AI 修正建议：{suggestion[:200]}...")
+                                ~~~~~~~~~~^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+2026-06-05 09:18:31 - src.data.loader - INFO - 成功加载文件：tests/sample_data.csv, 行数:4, 列数:14
+2026-06-05 09:37:46 - src.data.loader - INFO - 成功加载文件：tests/sample_data.csv, 行数:4, 列数:14
+2026-06-05 09:47:44 - src.data.loader - INFO - 成功加载文件：tests/sample_data.csv, 行数:4, 列数:14
+2026-06-05 10:05:47 - src.data.loader - INFO - 成功加载文件：tests/sample_data.csv, 行数:4, 列数:14
+2026-06-07 23:16:12 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-07 23:16:12 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-07 23:16:12 - src.agent.coordinator - INFO - 开始加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv
+2026-06-07 23:16:12 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:4, 列数:14
+2026-06-07 23:16:12 - src.agent.coordinator - INFO - AI 分析数据中...
+2026-06-07 23:24:23 - src.agent.coordinator - INFO - AI 分析结果：N/A
+2026-06-07 23:24:23 - src.agent.coordinator - INFO - 解析数据中...
+2026-06-07 23:24:23 - src.agent.coordinator - INFO - 验证数据中...
+2026-06-07 23:24:23 - src.data.validator - INFO - 验证完成：0 个错误，0 个警告
+2026-06-07 23:37:41 - src.agent.coordinator - INFO - AI 推荐的模板：### 海关报关单据选择分析专家建议
+
+您好！作为海关报关单据选择专家，针对您提供的出口场景（深圳至洛杉矶，4 种产品），我已对可选单据类型进行了详细分析。以下是我的推荐方案及理由说明：
+
+#### 
+2026-06-07 23:37:41 - src.agent.coordinator - INFO - 生成报表中...
+2026-06-07 23:37:41 - src.template.engine - ERROR - python-docx 库不可用
+2026-06-07 23:37:41 - src.agent.coordinator - INFO - 报表生成成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_Shenzhen T_20260607_233741.docx
+2026-06-07 23:50:03 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-07 23:50:03 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-07 23:50:03 - src.agent.coordinator - INFO - 开始加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv
+2026-06-07 23:50:03 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:4, 列数:14
+2026-06-07 23:50:03 - src.agent.coordinator - INFO - AI 分析数据中...
+2026-06-07 23:58:50 - src.agent.coordinator - INFO - AI 分析结果：N/A
+2026-06-07 23:58:50 - src.agent.coordinator - INFO - 解析数据中...
+2026-06-07 23:58:50 - src.agent.coordinator - INFO - 验证数据中...
+2026-06-07 23:58:50 - src.data.validator - INFO - 验证完成：0 个错误，0 个警告
+2026-06-08 00:17:43 - src.agent.coordinator - INFO - AI 推荐的模板：作为海关报关专家，基于您提供的数据（4 种产品、深圳出口、洛杉矶进口）及可选单据类型，我的分析如下：
+
+### 🏆 推荐单据类型
+**核心推荐：报关单 (Customs Declaration For
+2026-06-08 00:17:43 - src.agent.coordinator - INFO - 生成报表中...
+2026-06-08 00:17:43 - src.template.engine - ERROR - 生成文档失败：Invalid attribute name 'w:ascii'
+Traceback (most recent call last):
+  File "/Users/shenqing/Desktop/custom_agent_project/src/template/engine.py", line 53, in generate_document
+    doc.styles['Normal']._element.rPr.rFonts.set(
+  File "src/lxml/etree.pyx", line 834, in lxml.etree._Element.set
+  File "src/lxml/apihelpers.pxi", line 586, in lxml.etree._setAttributeValue
+  File "src/lxml/apihelpers.pxi", line 1764, in lxml.etree._attributeValidOrRaise
+ValueError: Invalid attribute name 'w:ascii'
+2026-06-08 00:17:43 - src.agent.coordinator - INFO - 报表生成成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_Shenzhen T_20260608_001743.docx
+2026-06-08 00:37:07 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-08 00:37:07 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-08 00:37:07 - src.agent.coordinator - INFO - 开始加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv
+2026-06-08 00:37:07 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:4, 列数:14
+2026-06-08 00:37:07 - src.agent.coordinator - INFO - AI 分析数据中...
+2026-06-08 00:42:42 - src.agent.coordinator - INFO - AI 分析结果：N/A
+2026-06-08 00:42:42 - src.agent.coordinator - INFO - 解析数据中...
+2026-06-08 00:42:42 - src.agent.coordinator - INFO - 验证数据中...
+2026-06-08 00:42:42 - src.data.validator - INFO - 验证完成：0 个错误，0 个警告
+2026-06-08 00:50:01 - src.agent.coordinator - INFO - AI 推荐的模板：### 报关单据选择分析与推荐
+
+您好！作为海关报关专家，针对您提供的出口商（Shenzhen Tech Co., Ltd.）、进口商（Los Angeles Trading Inc.）及 4 种产品
+2026-06-08 00:50:01 - src.agent.coordinator - INFO - 生成报表中...
+2026-06-08 00:50:01 - src.template.engine - INFO - 文档保存成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_Shenzhen T_20260608_005001.docx
+2026-06-08 00:50:01 - src.agent.coordinator - INFO - 报表生成成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_Shenzhen T_20260608_005001.docx
+2026-06-09 01:03:12 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-09 01:03:12 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-09 01:03:12 - src.agent.coordinator - INFO - 开始加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv
+2026-06-09 01:03:12 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:4, 列数:14
+2026-06-09 01:03:12 - src.agent.coordinator - INFO - AI 分析数据中...
+2026-06-09 01:09:03 - src.agent.coordinator - INFO - AI 分析结果：N/A
+2026-06-09 01:09:03 - src.agent.coordinator - INFO - 解析数据中...
+2026-06-09 01:09:03 - src.agent.coordinator - INFO - 验证数据中...
+2026-06-09 01:09:03 - src.data.validator - INFO - 验证完成：0 个错误，0 个警告
+2026-06-09 01:24:44 - src.agent.coordinator - INFO - AI 推荐的模板：您好！我是海关报关单据选择专家。根据您提供的贸易数据（出口商：Shenzhen Tech Co., Ltd.，进口商：Los Angeles Trading Inc.，产品数量：4），这属于典型的**
+2026-06-09 01:24:44 - src.agent.coordinator - INFO - 生成报表中...
+2026-06-09 01:24:44 - src.template.engine - INFO - 文档保存成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_Shenzhen T_20260609_012444.docx
+2026-06-09 01:24:44 - src.agent.coordinator - INFO - 报表生成成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_Shenzhen T_20260609_012444.docx
+2026-06-09 01:47:28 - src.data.loader - INFO - 成功加载文件：tests/sample_data.csv, 行数:4, 列数:14
+2026-06-09 04:06:49 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-09 04:06:49 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-09 04:06:49 - src.agent.coordinator - INFO - 开始加载文件：data/test_data_cn.csv
+2026-06-09 04:06:49 - src.data.loader - INFO - 成功加载文件：data/test_data_cn.csv, 行数:4, 列数:1
+2026-06-09 04:06:49 - src.agent.coordinator - INFO - AI 分析数据中...
+2026-06-09 04:14:49 - src.agent.coordinator - INFO - AI 分析结果：N/A
+2026-06-09 04:14:49 - src.agent.coordinator - INFO - 解析数据中...
+2026-06-09 04:14:49 - src.agent.coordinator - INFO - 验证数据中...
+2026-06-09 04:14:49 - src.data.validator - INFO - 验证完成：13 个错误，4 个警告
+2026-06-09 04:24:47 - src.agent.coordinator - INFO - AI 修正建议：作为海关报关数据修正专家，针对当前数据验证失败的情况，以下是针对各项错误与警告的详细修正建议：
+
+### 1. 进口商信息缺失 (`importer`)
+*   **原因**：申报主体信息未填写或数据对接遗漏，导致无法确定纳税义务人。
+*   **修正方法**：
+    *   补充**境内收货人/进口商**的完整法定中文名称。
+    *   确保名称与海关备案登记名称完全一致。
+*   **预...
+2026-06-09 04:37:26 - src.agent.coordinator - INFO - AI 推荐的模板：### 报关单据选择与分析报告
+
+**专家角色：** 海关报关单据专家
+**分析对象：** customs_data_4_products
+**数据状态：** 关键信息缺失，不可直接用于正式申报
+
+-
+2026-06-09 04:37:26 - src.agent.coordinator - INFO - 生成报表中...
+2026-06-09 04:37:26 - src.template.engine - INFO - 文档保存成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_300.0，中国，2_20260609_043726.docx
+2026-06-09 04:37:26 - src.agent.coordinator - INFO - 报表生成成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_300.0，中国，2_20260609_043726.docx
+2026-06-09 05:25:24 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-09 05:25:24 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-09 05:25:24 - src.agent.coordinator - INFO - 开始加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv
+2026-06-09 05:25:24 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:4, 列数:14
+2026-06-09 05:25:24 - src.agent.coordinator - INFO - AI 分析数据中...
+2026-06-09 05:32:16 - src.agent.coordinator - INFO - AI 分析结果：N/A
+2026-06-09 05:32:16 - src.agent.coordinator - INFO - 解析数据中...
+2026-06-09 05:32:16 - src.agent.coordinator - INFO - 验证数据中...
+2026-06-09 05:32:16 - src.data.validator - INFO - 验证完成：0 个错误，0 个警告
+2026-06-09 05:44:21 - src.agent.coordinator - INFO - AI 推荐的模板：### 📋 报关单据选择分析报告
+
+**专家身份**：海关报关专家
+**分析对象**：Shenzhen Tech Co., Ltd. (出口) ➔ Los Angeles Trading Inc. (
+2026-06-09 05:44:21 - src.agent.coordinator - INFO - 生成报表中...
+2026-06-09 05:44:21 - src.template.engine - INFO - 文档保存成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_Shenzhen T_20260609_054421.docx
+2026-06-09 05:44:21 - src.agent.coordinator - INFO - 报表生成成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_Shenzhen T_20260609_054421.docx
+2026-06-09 08:39:03 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmptm6o3tw6.db
+2026-06-09 08:39:03 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp8stul8bq.db
+2026-06-09 08:39:03 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：0
+2026-06-09 08:39:03 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp_e5otl9e.db
+2026-06-09 08:39:03 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp027odfno.db
+2026-06-09 08:39:03 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：0
+2026-06-09 08:39:03 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpcc0ymdxn.db
+2026-06-09 08:39:03 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：0
+2026-06-09 08:39:03 - src.data.cache - INFO - 缓存已清理，删除 1 条记录
+2026-06-09 08:39:03 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp26ih7ou0.db
+2026-06-09 08:39:05 - src.data.cache - INFO - 数据缓存已初始化：/Users/shenqing/Desktop/custom_agent_project/.data_cache.db
+2026-06-09 08:39:05 - src.data.loader - INFO - 缓存已启用 (前2行作为缓存键)
+2026-06-09 08:39:05 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp4slf6w5h.xlsx, 行数:2, 列数:9
+2026-06-09 08:39:05 - src.data.cache - INFO - 缓存命中：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp4slf6w5h.xlsx, 命中次数：0
+2026-06-09 08:39:05 - src.data.loader - INFO - 使用缓存结果，命中次数：0
+2026-06-09 08:39:05 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpg_vzhul3.xlsx, 行数:2, 列数:9
+2026-06-09 08:39:05 - src.data.loader - INFO - 缓存已启用 (前2行作为缓存键)
+2026-06-09 08:39:05 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpg64txmyy.xlsx, 行数:2, 列数:9
+2026-06-09 08:39:05 - src.data.loader - INFO - 缓存已启用 (前5行作为缓存键)
+2026-06-09 09:12:18 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp8igr39tv.db
+2026-06-09 09:12:18 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpf_02h791.db
+2026-06-09 09:12:18 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：1
+2026-06-09 09:12:18 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpim6u81jx.db
+2026-06-09 09:12:18 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpwk6h9ue9.db
+2026-06-09 09:12:18 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：1
+2026-06-09 09:12:18 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：2
+2026-06-09 09:12:18 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp0y5pyqef.db
+2026-06-09 09:12:18 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：1
+2026-06-09 09:12:18 - src.data.cache - INFO - 缓存已清理，删除 1 条记录
+2026-06-09 09:12:18 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpbija46a2.db
+2026-06-09 09:12:18 - src.data.cache - INFO - 数据缓存已初始化：/Users/shenqing/Desktop/custom_agent_project/.data_cache.db
+2026-06-09 09:12:18 - src.data.loader - INFO - 缓存已启用 (前2行作为缓存键)
+2026-06-09 09:12:18 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmptvu9385c.xlsx, 行数:2, 列数:9
+2026-06-09 09:12:18 - src.data.cache - INFO - 缓存命中：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmptvu9385c.xlsx, 命中次数：1
+2026-06-09 09:12:18 - src.data.loader - INFO - 使用缓存结果，命中次数：1
+2026-06-09 09:12:18 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpa6pggr6r.xlsx, 行数:2, 列数:9
+2026-06-09 09:12:18 - src.data.loader - INFO - 缓存已启用 (前2行作为缓存键)
+2026-06-09 09:12:18 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpdj00of3s.xlsx, 行数:2, 列数:9
+2026-06-09 09:12:18 - src.data.loader - INFO - 缓存已启用 (前5行作为缓存键)
+2026-06-09 09:49:53 - src.data.cache - INFO - 数据缓存已初始化：/Users/shenqing/Desktop/custom_agent_project/.data_cache.db
+2026-06-09 09:49:53 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-09 09:49:53 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-09 09:49:53 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-09 09:49:53 - src.agent.coordinator - INFO - 开始加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/test_data.json
+2026-06-09 09:49:53 - src.data.loader - ERROR - 不支持的文件格式：.json
+2026-06-09 09:49:53 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-09 09:49:53 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-09 09:49:53 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-09 09:49:53 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-09 09:49:53 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-09 09:49:53 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-09 09:49:53 - src.agent.coordinator - INFO - 开始加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/test_data.json
+2026-06-09 09:49:53 - src.data.loader - ERROR - 不支持的文件格式：.json
+2026-06-09 09:49:54 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-09 09:49:54 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-09 09:49:54 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-09 09:49:54 - src.agent.coordinator - INFO - 开始加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/test_data.json
+2026-06-09 09:49:54 - src.data.loader - ERROR - 不支持的文件格式：.json
+2026-06-09 09:49:54 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-09 09:49:54 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp2oczobc6.db
+2026-06-09 09:49:54 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpl1wlb06f.db
+2026-06-09 09:49:54 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：1
+2026-06-09 09:49:54 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp8p5pcs14.db
+2026-06-09 09:49:54 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpngwz4txk.db
+2026-06-09 09:49:54 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：1
+2026-06-09 09:49:54 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：2
+2026-06-09 09:49:54 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpdpkzr644.db
+2026-06-09 09:49:54 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：1
+2026-06-09 09:49:54 - src.data.cache - INFO - 缓存已清理，删除 1 条记录
+2026-06-09 09:49:54 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpjm5gornz.db
+2026-06-09 09:49:54 - src.data.loader - INFO - 缓存已启用 (前2行作为缓存键)
+2026-06-09 09:49:54 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpok2elyaj.xlsx, 行数:2, 列数:9
+2026-06-09 09:49:54 - src.data.cache - INFO - 缓存命中：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpok2elyaj.xlsx, 命中次数：1
+2026-06-09 09:49:54 - src.data.loader - INFO - 使用缓存结果，命中次数：1
+2026-06-09 09:49:54 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp_nosl6ae.xlsx, 行数:2, 列数:9
+2026-06-09 09:49:54 - src.data.loader - INFO - 缓存已启用 (前2行作为缓存键)
+2026-06-09 09:49:54 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp7muv67lu.xlsx, 行数:2, 列数:9
+2026-06-09 09:49:54 - src.data.loader - INFO - 缓存已启用 (前5行作为缓存键)
+2026-06-09 09:49:54 - src.data.cache - INFO - 数据缓存已初始化：/Users/shenqing/Desktop/custom_agent_project/.data_cache.db
+2026-06-09 09:49:54 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-09 09:49:54 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:1, 列数:10
+2026-06-09 09:49:54 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-09 09:49:54 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:1, 列数:10
+2026-06-09 09:49:54 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-09 09:49:54 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:1, 列数:10
+2026-06-09 10:41:21 - src.data.cache - INFO - 数据缓存已初始化：/Users/shenqing/Desktop/custom_agent_project/.data_cache.db
+2026-06-09 10:41:21 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-09 10:41:21 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:1, 列数:10
+2026-06-09 10:41:21 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-09 10:41:21 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:1, 列数:10
+2026-06-09 10:41:21 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-09 10:41:21 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:1, 列数:10
+2026-06-10 20:59:36 - src.data.cache - INFO - 数据缓存已初始化：/Users/shenqing/Desktop/custom_agent_project/.data_cache.db
+2026-06-10 20:59:36 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-10 20:59:36 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-10 20:59:36 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-10 20:59:36 - src.agent.coordinator - INFO - 开始加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv
+2026-06-10 20:59:36 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:2, 列数:11
+2026-06-10 20:59:36 - src.agent.coordinator - INFO - AI 分析数据中...
+2026-06-10 21:09:45 - src.agent.coordinator - INFO - AI 分析结果：N/A
+2026-06-10 21:09:45 - src.agent.coordinator - INFO - 解析数据中...
+2026-06-10 21:09:45 - src.agent.coordinator - INFO - 验证数据中...
+2026-06-10 21:09:45 - src.data.validator - INFO - 验证完成：0 个错误，2 个警告
+2026-06-10 21:25:12 - src.agent.coordinator - INFO - AI 推荐的模板：### 报关单据选择专家分析报告
+
+您好，我是海关报关单据选择专家。根据您提供的数据（`customs_data_2_products`）及业务背景，我进行了详细的合规性分析与单据推荐。
+
+#### 
+2026-06-10 21:25:12 - src.agent.coordinator - INFO - 生成报表中...
+2026-06-10 21:25:12 - src.template.engine - INFO - 文档保存成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_深圳科技有限公司，纽_20260610_212512.docx
+2026-06-10 21:25:12 - src.agent.coordinator - INFO - 报表生成成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_深圳科技有限公司，纽_20260610_212512.docx
+2026-06-10 21:56:52 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp1dkvscga.db
+2026-06-10 21:56:52 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpkkq1ubza.db
+2026-06-10 21:56:52 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：1
+2026-06-10 21:56:52 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpvwan0lj5.db
+2026-06-10 21:56:52 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp63c6r9vx.db
+2026-06-10 21:56:52 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：1
+2026-06-10 21:56:52 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：2
+2026-06-10 21:56:52 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpk3x75j4n.db
+2026-06-10 21:56:52 - src.data.cache - INFO - 缓存命中：test.xlsx, 命中次数：1
+2026-06-10 21:56:52 - src.data.cache - INFO - 缓存已清理，删除 1 条记录
+2026-06-10 21:56:52 - src.data.cache - INFO - 数据缓存已初始化：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmp16d0rpnd.db
+2026-06-10 21:56:52 - src.data.cache - INFO - 数据缓存已初始化：/Users/shenqing/Desktop/custom_agent_project/.data_cache.db
+2026-06-10 21:56:52 - src.data.loader - INFO - 缓存已启用 (前2行作为缓存键)
+2026-06-10 21:56:52 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpql_9e5bk.xlsx, 行数:2, 列数:9
+2026-06-10 21:56:52 - src.data.cache - INFO - 缓存命中：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpql_9e5bk.xlsx, 命中次数：1
+2026-06-10 21:56:52 - src.data.loader - INFO - 使用缓存结果，命中次数：1
+2026-06-10 21:56:52 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmpug3x_czi.xlsx, 行数:2, 列数:9
+2026-06-10 21:56:52 - src.data.loader - INFO - 缓存已启用 (前2行作为缓存键)
+2026-06-10 21:56:52 - src.data.loader - INFO - 成功加载文件：/var/folders/yb/41vn58nj7fvcnp_91j41fylw0000gn/T/tmprpmmarmi.xlsx, 行数:2, 列数:9
+2026-06-10 21:56:52 - src.data.loader - INFO - 缓存已启用 (前5行作为缓存键)
+2026-06-10 23:26:28 - src.utils.llm_client - INFO - LLM 客户端初始化：主模型=qwen3.5:27b, 降级模型=glm-4.7-flash
+2026-06-10 23:26:28 - src.utils.llm_client - INFO - 调用主模型 qwen3.5:27b (尝试 1/3)
+2026-06-10 23:28:28 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：qwen3.5:27b)
+2026-06-10 23:28:28 - src.utils.llm_client - WARNING - 主模型调用失败，尝试 2
+2026-06-10 23:28:28 - src.utils.llm_client - INFO - 调用主模型 qwen3.5:27b (尝试 2/3)
+2026-06-10 23:30:28 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：qwen3.5:27b)
+2026-06-10 23:30:28 - src.utils.llm_client - WARNING - 主模型调用失败，尝试 3
+2026-06-10 23:30:28 - src.utils.llm_client - INFO - 调用主模型 qwen3.5:27b (尝试 3/3)
+2026-06-10 23:32:28 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：qwen3.5:27b)
+2026-06-10 23:32:28 - src.utils.llm_client - WARNING - 主模型调用失败，尝试 4
+2026-06-10 23:32:28 - src.utils.llm_client - WARNING - 主模型 3 次重试失败，降级到 glm-4.7-flash
+2026-06-10 23:32:28 - src.utils.llm_client - INFO - 调用降级模型 glm-4.7-flash (尝试 1/3)
+2026-06-10 23:34:28 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：glm-4.7-flash)
+2026-06-10 23:34:28 - src.utils.llm_client - WARNING - 降级模型调用失败，尝试 2
+2026-06-10 23:34:28 - src.utils.llm_client - INFO - 调用降级模型 glm-4.7-flash (尝试 2/3)
+2026-06-10 23:36:28 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：glm-4.7-flash)
+2026-06-10 23:36:28 - src.utils.llm_client - WARNING - 降级模型调用失败，尝试 3
+2026-06-10 23:36:28 - src.utils.llm_client - INFO - 调用降级模型 glm-4.7-flash (尝试 3/3)
+2026-06-10 23:38:28 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：glm-4.7-flash)
+2026-06-10 23:38:28 - src.utils.llm_client - WARNING - 降级模型调用失败，尝试 4
+2026-06-10 23:38:28 - src.utils.llm_client - ERROR - 所有模型调用均失败
+2026-06-10 23:42:31 - src.utils.llm_client - INFO - LLM 客户端初始化：主模型=qwen3.5:27b, 降级模型=glm-4.7-flash
+2026-06-10 23:42:31 - src.utils.llm_client - INFO - 调用主模型 qwen3.5:27b (尝试 1/3)
+2026-06-10 23:44:31 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：qwen3.5:27b)
+2026-06-10 23:44:31 - src.utils.llm_client - WARNING - 主模型调用失败，尝试 2
+2026-06-10 23:44:31 - src.utils.llm_client - INFO - 调用主模型 qwen3.5:27b (尝试 2/3)
+2026-06-10 23:46:31 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：qwen3.5:27b)
+2026-06-10 23:46:31 - src.utils.llm_client - WARNING - 主模型调用失败，尝试 3
+2026-06-10 23:46:31 - src.utils.llm_client - INFO - 调用主模型 qwen3.5:27b (尝试 3/3)
+2026-06-10 23:48:31 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：qwen3.5:27b)
+2026-06-10 23:48:31 - src.utils.llm_client - WARNING - 主模型调用失败，尝试 4
+2026-06-10 23:48:31 - src.utils.llm_client - WARNING - 主模型 3 次重试失败，降级到 glm-4.7-flash
+2026-06-10 23:48:31 - src.utils.llm_client - INFO - 调用降级模型 glm-4.7-flash (尝试 1/3)
+2026-06-10 23:50:31 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：glm-4.7-flash)
+2026-06-10 23:50:31 - src.utils.llm_client - WARNING - 降级模型调用失败，尝试 2
+2026-06-10 23:50:31 - src.utils.llm_client - INFO - 调用降级模型 glm-4.7-flash (尝试 2/3)
+2026-06-10 23:52:32 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：glm-4.7-flash)
+2026-06-10 23:52:32 - src.utils.llm_client - WARNING - 降级模型调用失败，尝试 3
+2026-06-10 23:52:32 - src.utils.llm_client - INFO - 调用降级模型 glm-4.7-flash (尝试 3/3)
+2026-06-10 23:54:32 - src.utils.llm_client - ERROR - Ollama 调用超时 (模型：glm-4.7-flash)
+2026-06-10 23:54:32 - src.utils.llm_client - WARNING - 降级模型调用失败，尝试 4
+2026-06-10 23:54:32 - src.utils.llm_client - ERROR - 所有模型调用均失败
+2026-06-16 22:31:41 - src.data.cache - INFO - 数据缓存已初始化：/Users/shenqing/Desktop/custom_agent_project/.data_cache.db
+2026-06-16 22:31:41 - src.data.loader - INFO - 缓存已启用 (前3行作为缓存键)
+2026-06-16 22:31:41 - src.agent.reasoning - INFO - AI Reasoner initialized with model: qwen3.5:27b
+2026-06-16 22:31:41 - src.agent.coordinator - INFO - AI Agent Coordinator initialized
+2026-06-16 22:31:41 - src.agent.coordinator - INFO - 开始加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv
+2026-06-16 22:31:41 - src.data.loader - INFO - 成功加载文件：/Users/shenqing/Desktop/custom_agent_project/tests/sample_data.csv, 行数:2, 列数:11
+2026-06-16 22:31:41 - src.agent.coordinator - INFO - AI 分析数据中...
+2026-06-16 22:51:54 - src.agent.coordinator - INFO - AI 分析结果：N/A
+2026-06-16 22:51:54 - src.agent.coordinator - INFO - 解析数据中...
+2026-06-16 22:51:54 - src.agent.coordinator - INFO - 验证数据中...
+2026-06-16 22:51:54 - src.data.validator - INFO - 验证完成：0 个错误，2 个警告
+2026-06-16 23:07:50 - src.agent.coordinator - INFO - AI 推荐的模板：### 报关单据分析与推荐报告
+
+**角色：** 海关报关专家
+**任务：** 基于提供的进出口数据生成并推荐最佳报关单据
+
+#### 1. 数据清洗与分析
+在生成单据前，首先对提供的数据字段进行标准
+2026-06-16 23:07:50 - src.agent.coordinator - INFO - 生成报表中...
+2026-06-16 23:07:50 - src.template.engine - INFO - 文档保存成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_深圳科技有限公司，纽_20260616_230750.docx
+2026-06-16 23:07:50 - src.agent.coordinator - INFO - 报表生成成功：/Users/shenqing/Desktop/custom_agent_project/output/报关单_深圳科技有限公司，纽_20260616_230750.docx
