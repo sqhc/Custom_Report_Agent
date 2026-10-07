@@ -11,6 +11,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.agent import AgentCoordinator
 from src.agent.reasoning import AIReasoner
+from src.utils.config import Config
 from src.utils.logger import setup_logger
 
 logger = setup_logger("test")
@@ -76,12 +77,26 @@ class TestAgentCoordinator(unittest.TestCase):
         cls.test_file.write_text("\n".join(rows) + "\n", encoding="utf-8")
 
     def setUp(self):
-        """默认使用离线替身，保证测试不触网、不依赖 Ollama"""
+        """隔离副作用，保证测试不触网、不依赖 Ollama、不污染仓库
+
+        - 用离线替身替换 AIReasoner：避免真实大模型调用
+        - 把 Config.OUTPUT_DIR 指向临时目录：报告生成会写 docx，
+          否则会不断往仓库的 output/ 目录里堆积文件
+        """
         patcher = patch.object(
             sys.modules["src.agent.coordinator"], "AIReasoner", _OfflineReasoner
         )
         self.addCleanup(patcher.stop)
         patcher.start()
+
+        self._orig_output_dir = Config.OUTPUT_DIR
+        type(self)._saved_output_dir = self._orig_output_dir
+        Config.OUTPUT_DIR = Path(self._temp_dir.name)
+        self.addCleanup(self._restore_output_dir)
+
+    @classmethod
+    def _restore_output_dir(cls):
+        Config.OUTPUT_DIR = cls._saved_output_dir
 
     @classmethod
     def tearDownClass(cls):
