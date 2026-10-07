@@ -2,6 +2,9 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 from datetime import date
+import re
+
+from ..utils.constants import HS_CODE_PATTERN
 
 
 @dataclass
@@ -16,6 +19,17 @@ class ProductItem:
     weight: float
     origin: str
     additional_info: Dict[str, Any] = field(default_factory=dict)
+
+    @property
+    def hs_code_validation(self) -> bool:
+        """HS 编码格式是否合法（6-10 位数字）
+
+        与 :class:`~src.data.validator.DataValidator` 使用同一套
+        :data:`~src.utils.constants.HS_CODE_PATTERN` 规则，便于单条商品自检。
+        """
+        if not self.hs_code:
+            return False
+        return bool(re.match(HS_CODE_PATTERN, self.hs_code.strip()))
 
     def to_dict(self) -> Dict[str, Any]:
         """转换为字典"""

@@ -1,17 +1,52 @@
 """Agent 测试"""
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 import sys
-import json
+import tempfile
 
 # 添加项目路径
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.agent import AgentCoordinator
+from src.agent.reasoning import AIReasoner
 from src.utils.logger import setup_logger
 
 logger = setup_logger("test")
+
+
+class _OfflineReasoner(AIReasoner):
+    """离线推理引擎替身：始终报告 AI 不可用
+
+    单元测试不应依赖本机是否运行 Ollama、也不应触发真实（可能数分钟）的
+    大模型调用，因此统一用本替身替代。
+    """
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def is_available(self) -> bool:
+        return False
+
+
+class _FakeReasoner(AIReasoner):
+    """模拟一个"可用"的推理引擎，用于覆盖 AI 分支"""
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def is_available(self) -> bool:
+        return True
+
+    def analyze_data(self, data_preview, columns):
+        return {"analysis": "ok", "details": "stubbed"}
+
+    def select_template(self, data_type, product_count, exporter, importer):
+        return {"recommendation": "报关单", "confidence": "high"}
+
+    def get_fix_suggestion(self, validation_report):
+        return "stubbed suggestion"
 
 
 class TestAgentCoordinator(unittest.TestCase):
@@ -19,46 +54,39 @@ class TestAgentCoordinator(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """创建测试数据"""
-        cls.test_data = {
-            "exporter": "Test Company",
-            "importer": "Test Importer",
-            "invoice_number": "INV-TEST-001",
-            "contract_number": "CONTRACT-001",
-            "port_of_loading": "Shanghai",
-            "port_of_discharge": "Los Angeles",
-            "currency": "USD",
-            "products": [
-                {
-                    "hs_code": "85285210",
-                    "product_name": "Test Monitor",
-                    "quantity": 100,
-                    "unit": "PCS",
-                    "unit_price": 100.00,
-                    "weight": 5.0,
-                    "origin": "CN"
-                },
-                {
-                    "hs_code": "84713010",
-                    "product_name": "Test Laptop",
-                    "quantity": 50,
-                    "unit": "PCS",
-                    "unit_price": 500.00,
-                    "weight": 2.0,
-                    "origin": "CN"
-                }
-            ]
-        }
+        """创建测试数据
 
-        cls.test_file = PROJECT_ROOT / "tests" / "test_data.json"
-        with open(cls.test_file, 'w', encoding='utf-8') as f:
-            json.dump(cls.test_data, f, ensure_ascii=False, indent=2)
+        使用临时目录中的扁平化 CSV：DataLoader 仅支持 csv/xlsx/xls/txt，
+        此前的 test_data.json 属于不受支持的格式，必然加载失败。
+        """
+        cls._temp_dir = tempfile.TemporaryDirectory()
+        cls.test_file = Path(cls._temp_dir.name) / "test_data.csv"
+
+        rows = [
+            "exporter,importer,invoice_number,contract_number,"
+            "port_of_loading,port_of_discharge,currency,"
+            "hs_code,product_name,quantity,unit,unit_price,weight,origin",
+            "Test Company,Test Importer,INV-TEST-001,CONTRACT-001,"
+            "Shanghai,Los Angeles,USD,"
+            "85285210,Test Monitor,100,PCS,100.00,5.0,CN",
+            "Test Company,Test Importer,INV-TEST-001,CONTRACT-001,"
+            "Shanghai,Los Angeles,USD,"
+            "84713010,Test Laptop,50,PCS,500.00,2.0,CN",
+        ]
+        cls.test_file.write_text("\n".join(rows) + "\n", encoding="utf-8")
+
+    def setUp(self):
+        """默认使用离线替身，保证测试不触网、不依赖 Ollama"""
+        patcher = patch.object(
+            sys.modules["src.agent.coordinator"], "AIReasoner", _OfflineReasoner
+        )
+        self.addCleanup(patcher.stop)
+        patcher.start()
 
     @classmethod
     def tearDownClass(cls):
-        """清理测试数据"""
-        if cls.test_file.exists():
-            cls.test_file.unlink()
+        """清理临时测试数据"""
+        cls._temp_dir.cleanup()
 
     def test_initialization(self):
         """测试初始化"""
@@ -79,10 +107,20 @@ class TestAgentCoordinator(unittest.TestCase):
         self.assertIn("output_file", result)
         self.assertIn("errors", result)
         self.assertIn("warnings", result)
+        self.assertIn("steps_completed", result)
 
-        # 检查 AI 是否可用
-        if agent.ai_reasoner.is_available():
-            self.assertIn("ai_suggestion", result) or result["success"]
+        # 使用受支持的 CSV 输入时，完整流程应当成功
+        self.assertTrue(result["success"], f"处理失败：{result['errors']}")
+        self.assertTrue(result["output_file"])
+        self.assertEqual(
+            result["steps_completed"],
+            ["load_file", "analyze_data", "parse_data",
+             "validate_data", "select_template", "generate_report"],
+        )
+
+        # AI 不可用（如本地未运行 Ollama）时不应写入 ai_suggestion
+        if not agent.ai_reasoner.is_available():
+            self.assertNotIn("ai_suggestion", result)
 
     def test_get_status(self):
         """测试状态获取"""
@@ -110,6 +148,19 @@ class TestAgentCoordinator(unittest.TestCase):
         # 重置后应该没有数据
         agent.reset()
         self.assertFalse(agent.get_status()["has_data"])
+
+    def test_process_file_with_ai_available(self):
+        """AI 可用时应写入分析与模板建议（使用替身，不触网）"""
+        with patch.object(
+            sys.modules["src.agent.coordinator"], "AIReasoner", _FakeReasoner
+        ):
+            agent = AgentCoordinator()
+            self.assertTrue(agent.ai_reasoner.is_available())
+            result = agent.process_file(str(self.test_file))
+
+        self.assertTrue(result["success"], f"处理失败：{result['errors']}")
+        self.assertEqual(result["template_suggestion"]["recommendation"], "报关单")
+        self.assertEqual(agent.get_status()["ai_available"], True)
 
 
 class TestAIAvailability(unittest.TestCase):

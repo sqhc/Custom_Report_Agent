@@ -82,9 +82,9 @@ python3 -m pytest tests/test_llm_client.py -v          # LLM unit tests (offline
 python3 -m pytest tests/test_llm_integration.py -v     # real openai SDK; auto-skips if not installed
 ```
 
-> ⚠️ `tests/test_data.py` **deletes** `tests/sample_data.csv` in `tearDown()`, even though that
-> file is tracked in git. After running the suite, restore it with
-> `git checkout -- tests/sample_data.csv`.
+> ✅ The suite is green (**72 passed / 7 skipped / 0 failed**, ~1s). Tests use offline
+> stubs and never require a running Ollama. `tests/test_data.py` and `tests/test_agent.py`
+> write only to `tempfile` directories — they no longer touch tracked repo files.
 
 ### Run Production
 ```bash
@@ -120,7 +120,6 @@ pip install "openai>=1.0.0"    # only needed for LLM_BACKEND=openai
 - python-docx namespace handling requires full XML namespace URI for `w:ascii` font attribute (use `r'{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii'`)
 - Ollama timeout: 120s configured in `Config.OLLAMA_TIMEOUT`
 - `.llm_cache/` entries key on `model:prompt`, so switching backends reuses cache for identical model names — run `rm -rf .llm_cache/*` after switching
-- **Pre-existing test failures (unrelated to LLM work):** `python3 -m pytest tests/ -q` baseline is
-  **64 passed / 7 failed** — 5 in `tests/test_data.py` (`DataValidator` missing `reset()` / stale
-  assertions) and 2 in `tests/test_agent.py` (missing `tests/sample_data.csv` + over-strict AI assertion).
-  Treat these as the baseline; a change is a regression only if it adds failures.
+- **Test suite is fully green:** `python3 -m pytest tests/ -q` → **72 passed / 7 skipped / 0 failed**
+  (~1s). The 7 skips are LLM integration tests (need `pip install "openai>=1.0.0"`).
+  All tests run offline via stubs; none require a live Ollama server.

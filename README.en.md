@@ -254,10 +254,10 @@ pytest tests/test_llm_integration.py -v
 pytest tests/ --cov=src --cov-report=html
 ```
 
-> ⚠️ Known pre-existing failures (unrelated to the LLM work): the `pytest tests/ -q`
-> baseline is **64 passed / 7 failed / 7 skipped**. All 7 failures come from existing
-> defects in `tests/test_data.py` and `tests/test_agent.py`. Treat that baseline as the
-> reference when checking for regressions.
+> ✅ `pytest tests/ -q` currently reports **72 passed / 7 skipped / 0 failed**, and the
+> whole suite finishes in about a second. Tests use offline stubs and **do not require
+> Ollama to be running**. (The 7 skips are LLM integration tests, which only run after
+> `pip install "openai>=1.0.0"`.)
 
 ## Usage Examples
 

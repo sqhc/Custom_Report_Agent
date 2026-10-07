@@ -26,6 +26,15 @@ class DataValidator:
         self.errors: List[ValidationError] = []
         self.warnings: List[ValidationError] = []
 
+    def reset(self):
+        """清空上一次验证留下的错误与警告
+
+        注意：:meth:`validate` 每次调用时也会自动清空状态，
+        本方法用于在不执行验证的情况下显式重置。
+        """
+        self.errors = []
+        self.warnings = []
+
     def validate(self, data: CustomsData) -> bool:
         """
         验证数据

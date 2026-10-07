@@ -179,8 +179,10 @@ class TestCustomsData(unittest.TestCase):
         )
 
         # 检查总计
-        self.assertEqual(data.total_weight, 5200.0)  # (100*5) + (50*2)
+        # total_weight 为各商品 weight 之和（报告中显示为"总重量 ... KG"）
+        self.assertEqual(data.total_weight, 7.0)  # 5.0 + 2.0
         self.assertEqual(data.total_value, 35000.0)  # 10000 + 25000
+        self.assertEqual(data.total_quantity, 150)  # 100 + 50
 
     def test_invalid_hs_code(self):
         """测试 HS 编码格式"""

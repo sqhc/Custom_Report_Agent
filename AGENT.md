@@ -274,17 +274,27 @@ python3 cli.py --print-config          # 密钥自动脱敏
 - **`is_available()` 不探活**：仅表示"库已安装且客户端已构造"，不代表服务可达。
   这是刻意保持的语义，以免给离线场景引入额外延迟。
 
-### 7.2 既有缺陷（**与 LLM 改造无关，修复前请先确认**）
+### 7.2 测试状态（已全部修复）
 
-当前 `pytest tests/ -q` 的基线为 **64 passed / 7 failed**，7 项失败均为改造前既有：
+`pytest tests/ -q` 现为 **72 passed / 7 skipped / 0 failed**（约 1 秒）。
+此前遗留的 7 项失败已修复，记录如下以备追溯：
 
-- `tests/test_data.py`（5 项）：`DataValidator` 缺少测试所依赖的 `reset()`
-  方法或相关断言不匹配。
-- `tests/test_agent.py`（2 项）：`tests/sample_data.csv` 不存在导致加载失败，
-  且 `test_process_file` 在 AI 不可用时断言过严。
-- `run_test.py` 依赖 `tests/sample_data.csv`，该文件当前**不存在**。
+| 原失败 | 根因 | 处理方式 |
+|---|---|---|
+| `validator.reset()` ×3 | `DataValidator` 缺该方法（`validate()` 本就会清空状态） | 新增 `reset()`（纯增量 API） |
+| `hs_code_validation` | `ProductItem` 缺该属性 | 新增属性，复用 `HS_CODE_PATTERN` |
+| `total_weight == 5200` | 测试自相矛盾：注释算出 600，字面量写 5200，实际语义为 7.0 | 修正测试断言（`total_weight` 是各商品重量之和，报告显示为"总重量 ... KG"） |
+| `test_agent` ×2 | 夹具写成 `.json`，而 `DataLoader` 只支持 csv/xlsx/xls/txt；另有 `assertIn(...) or ...` 恒真断言 | 改用临时 CSV 夹具 + 真实断言 |
 
-> 判定回归的方法：确认失败集合与上述 7 项**完全一致**，且通过数只增不减。
+同时为测试卫生做了两点强化：
+
+- **不再触碰仓库文件**：`tests/test_data.py` 与 `tests/test_agent.py` 均只写 `tempfile`
+  临时目录（此前 `test_data.py` 会删掉被跟踪的 `tests/sample_data.csv`）。
+- **不再依赖本机 Ollama**：`test_agent.py` 通过替身屏蔽真实推理调用。
+  修复前若本机运行着 27B 模型，该测试会发起真实调用并可能挂起数分钟。
+
+> 判定回归的方法：确认 **0 failed**，且通过数只增不减。
+
 
 ---
 

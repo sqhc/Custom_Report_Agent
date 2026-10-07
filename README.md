@@ -253,9 +253,9 @@ pytest tests/test_llm_integration.py -v
 pytest tests/ --cov=src --cov-report=html
 ```
 
-> ⚠️ 已知既有失败（与 LLM 改造无关）：`pytest tests/ -q` 的基线为
-> **64 passed / 7 failed / 7 skipped**，失败均来自 `tests/test_data.py` 与
-> `tests/test_agent.py` 的既有缺陷。判断回归时以该基线为准。
+> ✅ `pytest tests/ -q` 当前为 **72 passed / 7 skipped / 0 failed**，
+> 全套约 1 秒完成。测试使用离线替身，**不依赖本机是否运行 Ollama**。
+> （7 项 skipped 为 LLM 集成测试，需 `pip install "openai>=1.0.0"` 后才会执行。）
 
 ## 使用示例
 
