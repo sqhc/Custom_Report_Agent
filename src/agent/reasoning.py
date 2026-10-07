@@ -1,16 +1,17 @@
-"""AI 推理引擎"""
+"""AI 推理引擎
+
+本模块通过 :class:`~src.agent.llm_client.BaseLLMClient` 访问大模型，
+后端由环境变量 ``LLM_BACKEND`` 决定（``ollama`` 本地 / ``openai`` 远程兼容接口）。
+
+对外接口（类名、方法签名、返回值）与改造前保持一致，
+现有调用方无需任何改动。
+"""
 import json
 from typing import Optional, Dict, Any, Callable, List
-from pathlib import Path
-
-try:
-    import ollama
-    OLLAMA_AVAILABLE = True
-except ImportError:
-    OLLAMA_AVAILABLE = False
 
 from ..utils.config import Config
 from ..utils.logger import setup_logger
+from .llm_client import BaseLLMClient, get_llm_client
 from .prompts import Prompts
 
 logger = setup_logger(__name__)
@@ -19,46 +20,55 @@ logger = setup_logger(__name__)
 class AIReasoner:
     """AI 推理引擎"""
 
-    def __init__(self, model: str = None, host: str = None):
+    def __init__(self, model: str = None, host: str = None,
+                 client: BaseLLMClient = None):
         """
         初始化 AI 推理引擎
-        :param model: Ollama 模型名称
-        :param host: Ollama 服务器地址
-        """
-        self.model = model or Config.OLLAMA_MODEL
-        self.host = host or Config.OLLAMA_HOST
-        self.client = None
 
-        if OLLAMA_AVAILABLE:
-            self.client = ollama.Client(host=self.host)
-            logger.info(f"AI Reasoner initialized with model: {self.model}")
+        :param model: 模型名称（不传则使用当前后端配置的模型）
+        :param host: Ollama 服务器地址（仅本地模式生效）
+        :param client: 可选的客户端实例，用于依赖注入/测试
+        """
+        if client is not None:
+            self.client = client
         else:
-            logger.warning("Ollama library not available. AI features will be limited.")
+            # 仅传递当前后端认识的参数
+            overrides = {}
+            if model:
+                overrides['model'] = model
+            if host and (Config.LLM_BACKEND or '').strip().lower() == 'ollama':
+                overrides['host'] = host
+
+            self.client = get_llm_client(**overrides)
+
+        # 保留公开属性，兼容既有调用方
+        self.model = self.client.model
+        self.host = getattr(self.client, 'host', None)
+
+        logger.info(
+            f"AI Reasoner 初始化完成：后端={self.client.backend}, 模型={self.model}"
+        )
 
     def is_available(self) -> bool:
-        """检查 AI 是否可用"""
-        return OLLAMA_AVAILABLE and self.client is not None
+        """检查 AI 是否可用（非阻塞，不发起网络探活）"""
+        return self.client is not None and self.client.is_available()
 
     def chat(self, prompt: str, system_prompt: str = "你是一位专业的 AI 助手") -> Optional[str]:
         """
         发送聊天请求
         :param prompt: 用户提示
         :param system_prompt: 系统提示
-        :return: AI 回复
+        :return: AI 回复，失败返回 None
         """
         if not self.is_available():
             logger.error("AI 不可用")
             return None
 
         try:
-            response = self.client.chat(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": prompt}
-                ]
-            )
-            return response["message"]["content"]
+            return self.client.chat([
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": prompt}
+            ])
         except Exception as e:
             logger.error(f"AI 聊天失败：{e}")
             return None
@@ -68,27 +78,17 @@ class AIReasoner:
         流式聊天请求
         :param prompt: 用户提示
         :param callback: 流式回调函数
-        :return: AI 回复
+        :return: AI 回复，失败返回 None
         """
         if not self.is_available():
             logger.error("AI 不可用")
             return None
 
         try:
-            full_response = ""
-            for chunk in self.client.chat(
-                model=self.model,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ],
-                stream=True
-            ):
-                content = chunk["message"]["content"]
-                full_response += content
-                if callback:
-                    callback(content)
-
-            return full_response
+            return self.client.chat_stream(
+                [{"role": "user", "content": prompt}],
+                callback=callback
+            )
         except Exception as e:
             logger.error(f"AI 流式聊天失败：{e}")
             return None
@@ -212,3 +212,9 @@ class AIReasoner:
             response or "",
             {"error": "提取失败", "raw_response": response}
         )
+
+
+# 别名：部分文档与调用方使用 Reasoner 这一名称
+Reasoner = AIReasoner
+
+__all__ = ['AIReasoner', 'Reasoner']

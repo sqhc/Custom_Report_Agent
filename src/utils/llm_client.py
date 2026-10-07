@@ -37,16 +37,35 @@ class LLMClient:
         fallback_model: str = None,
         timeout: int = 120,
         max_retries: int = 3,
-        enable_cache: bool = True
+        enable_cache: bool = True,
+        backend: str = None
     ):
-        self.primary_host = primary_host or os.getenv('OLLAMA_HOST', 'http://localhost:11434')
-        self.primary_model = primary_model or os.getenv('OLLAMA_MODEL', 'qwen3.5:27b')
-        self.fallback_model = fallback_model or 'glm-4.7-flash'
+        # 后端选择：默认跟随 Config.LLM_BACKEND（即环境变量 LLM_BACKEND）
+        if backend is None:
+            from .config import Config
+            backend = getattr(Config, 'LLM_BACKEND', 'ollama')
+        self.backend = (backend or 'ollama').strip().lower()
+
+        if self.backend == 'openai':
+            from .config import Config
+            # 远程模式：模型默认取 OPENAI_MODEL；降级仅在显式配置时启用
+            self.primary_host = primary_host or Config.OPENAI_BASE_URL
+            self.primary_model = primary_model or Config.OPENAI_MODEL
+            self.fallback_model = fallback_model or Config.OPENAI_FALLBACK_MODEL or ''
+        else:
+            self.primary_host = primary_host or os.getenv('OLLAMA_HOST', 'http://localhost:11434')
+            self.primary_model = primary_model or os.getenv('OLLAMA_MODEL', 'qwen3.5:27b')
+            # 保持原有默认降级模型不变
+            self.fallback_model = fallback_model or 'glm-4.7-flash'
+
         self.timeout = timeout
         self.max_retries = max_retries
         self.enable_cache = enable_cache
 
-        logger.info(f"LLM 客户端初始化：主模型={self.primary_model}, 降级模型={self.fallback_model}")
+        logger.info(
+            f"LLM 客户端初始化：后端={self.backend}, 主模型={self.primary_model}, "
+            f"降级模型={self.fallback_model or '<无>'}"
+        )
 
     def _get_cache_key(self, prompt: str, model: str) -> str:
         """生成缓存键"""
@@ -112,6 +131,60 @@ class LLMClient:
             logger.error(f"Ollama 响应解析失败：{e}")
             return None
 
+    def _call_openai_compatible(self, model: str, prompt: str, system: str = "") -> Optional[str]:
+        """调用 OpenAI 兼容接口（/v1/chat/completions）
+
+        失败时记录包含 HTTP 状态码的错误日志并返回 None，
+        以保持与 ``_call_ollama`` 一致的返回约定，便于复用上层重试逻辑。
+        """
+        from .config import Config
+
+        api_key = Config.OPENAI_API_KEY
+        if not api_key:
+            logger.error("缺少 OPENAI_API_KEY，无法调用远程模型")
+            return None
+
+        # 惰性导入：未安装 openai 时不影响本模块的其它功能
+        try:
+            from openai import OpenAI
+        except ImportError:
+            logger.error(
+                '未安装 openai 库。请执行：pip install "openai>=1.0.0"，'
+                "或设置 LLM_BACKEND=ollama 使用本地模型。"
+            )
+            return None
+
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+
+        try:
+            client = OpenAI(
+                api_key=api_key,
+                base_url=self.primary_host,
+                timeout=self.timeout,
+                max_retries=0,  # 重试由上层 call_with_retry 统一管理
+            )
+            response = client.chat.completions.create(model=model, messages=messages)
+            return response.choices[0].message.content or ""
+        except Exception as e:
+            status = getattr(e, 'status_code', None)
+            if not isinstance(status, int):
+                status = getattr(getattr(e, 'response', None), 'status_code', None)
+            status_part = f"HTTP {status}" if isinstance(status, int) else "无状态码"
+            logger.error(
+                f"OpenAI 兼容接口调用失败 [{status_part}]：{e} "
+                f"(模型={model}, 地址={self.primary_host})"
+            )
+            return None
+
+    def _call_model(self, model: str, prompt: str, system: str = "") -> Optional[str]:
+        """按当前后端分派调用"""
+        if self.backend == 'openai':
+            return self._call_openai_compatible(model, prompt, system)
+        return self._call_ollama(model, prompt, system)
+
     def call_with_retry(
         self,
         prompt: str,
@@ -140,7 +213,7 @@ class LLMClient:
         # 尝试主模型（带重试）
         for attempt in range(1, self.max_retries + 1):
             logger.info(f"调用主模型 {self.primary_model} (尝试 {attempt}/{self.max_retries})")
-            result = self._call_ollama(self.primary_model, prompt, system)
+            result = self._call_model(self.primary_model, prompt, system)
 
             if result is None:
                 logger.warning(f"主模型调用失败，尝试 {attempt + 1}")
@@ -155,13 +228,17 @@ class LLMClient:
             self._save_to_cache(cache_key, prompt, result, self.primary_model)
             return result
 
-        # 降级到备用模型
+        # 降级到备用模型（未配置降级模型时直接返回失败）
+        if not self.fallback_model:
+            logger.error("所有模型调用均失败（未配置降级模型）")
+            return None
+
         logger.warning(f"主模型 {self.max_retries} 次重试失败，降级到 {self.fallback_model}")
         fallback_cache_key = self._get_cache_key(prompt, self.fallback_model)
 
         for attempt in range(1, self.max_retries + 1):
             logger.info(f"调用降级模型 {self.fallback_model} (尝试 {attempt}/{self.max_retries})")
-            result = self._call_ollama(self.fallback_model, prompt, system)
+            result = self._call_model(self.fallback_model, prompt, system)
 
             if result is None:
                 logger.warning(f"降级模型调用失败，尝试 {attempt + 1}")
@@ -224,14 +301,49 @@ class LLMClient:
 _llm_client: Optional[LLMClient] = None
 
 
-def get_llm_client() -> LLMClient:
-    """获取全局 LLM 客户端实例"""
+def get_llm_client(force_new: bool = False, backend: str = None) -> LLMClient:
+    """获取全局 LLM 客户端实例
+
+    后端默认跟随 ``Config.LLM_BACKEND``（环境变量 ``LLM_BACKEND``），
+    即 ``ollama`` 使用本地服务，``openai`` 使用兼容 OpenAI 接口的远程服务。
+
+    :param force_new: 为 True 时强制新建实例（不覆盖单例）
+    :param backend: 显式指定后端，覆盖配置
+    """
     global _llm_client
-    if _llm_client is None:
-        from .config import Config
-        _llm_client = LLMClient(
-            primary_host=Config.OLLAMA_HOST,
-            primary_model=Config.OLLAMA_MODEL,
-            timeout=Config.OLLAMA_TIMEOUT
-        )
+    from .config import Config
+
+    effective_backend = (backend or getattr(Config, 'LLM_BACKEND', 'ollama') or 'ollama').strip().lower()
+
+    # 配置校验（LLM_BACKEND=ollama 时为空操作）
+    if backend is None:
+        Config.validate_llm()
+
+    if effective_backend == 'openai':
+        kwargs = {
+            'backend': effective_backend,
+            'primary_host': Config.OPENAI_BASE_URL,
+            'primary_model': Config.OPENAI_MODEL,
+            'timeout': Config.OPENAI_TIMEOUT,
+            'max_retries': Config.LLM_MAX_RETRIES,
+        }
+    else:
+        kwargs = {
+            'backend': effective_backend,
+            'primary_host': Config.OLLAMA_HOST,
+            'primary_model': Config.OLLAMA_MODEL,
+            'timeout': Config.OLLAMA_TIMEOUT,
+        }
+
+    if force_new:
+        return LLMClient(**kwargs)
+
+    if _llm_client is None or getattr(_llm_client, 'backend', None) != effective_backend:
+        _llm_client = LLMClient(**kwargs)
     return _llm_client
+
+
+def reset_llm_client():
+    """重置全局客户端缓存（供测试使用）"""
+    global _llm_client
+    _llm_client = None

@@ -6,6 +6,7 @@ from datetime import datetime
 from ..data import DataLoader, DataValidator, CustomsData
 from ..template import TemplateEngine
 from ..utils.config import Config
+from ..utils.llm_errors import LLMConfigError
 from ..utils.logger import setup_logger
 from .reasoning import AIReasoner
 
@@ -20,7 +21,13 @@ class AgentCoordinator:
         self.loader = DataLoader()
         self.validator = DataValidator()
         self.template_engine = TemplateEngine()
-        self.ai_reasoner = AIReasoner()
+
+        # LLM 配置错误属于启动期错误：记录清晰日志后向上抛出
+        try:
+            self.ai_reasoner = AIReasoner()
+        except LLMConfigError as e:
+            logger.error(f"LLM 配置错误，无法初始化 AI 推理引擎：\n{e}")
+            raise
 
         self.current_data: Optional[CustomsData] = None
         self.current_file: Optional[str] = None

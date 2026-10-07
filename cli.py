@@ -12,6 +12,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.agent import AgentCoordinator
 from src.utils.config import Config
+from src.utils.llm_errors import LLMConfigError
 from src.utils.logger import setup_logger
 from src.utils.cli_interface import RichCLI, show_version, console
 
@@ -79,6 +80,16 @@ def main():
   # 配置 Ollama 模型
   export OLLAMA_MODEL=qwen3.5:27b
   python cli.py --input data/sample.csv
+
+  # 切换到远程大模型（OpenAI 兼容接口）
+  export LLM_BACKEND=openai
+  export OPENAI_API_KEY=sk-xxxxxxxx
+  export OPENAI_BASE_URL=https://api.deepseek.com/v1
+  export OPENAI_MODEL=deepseek-chat
+  python cli.py --input data/sample.csv
+
+  # 查看当前生效配置（密钥自动脱敏）
+  python cli.py --print-config
         """
     )
 
@@ -126,6 +137,13 @@ def main():
         show_version()
         return 0
 
+    # 启动期校验 LLM 配置：配置非法时立即报错退出（不打印 traceback）
+    try:
+        Config.validate_llm()
+    except LLMConfigError as e:
+        console.print(f"[red]✗ LLM 配置错误，无法启动：[/red]\n{e}")
+        return 1
+
     # 打印配置
     if args.print_config:
         if not args.input:
@@ -162,7 +180,11 @@ def main():
         return 1
 
     for file_path in valid_files:
-        process_file(file_path, args.output, cli)
+        try:
+            process_file(file_path, args.output, cli)
+        except LLMConfigError as e:
+            console.print(f"\n[red]✗ LLM 配置错误：[/red]\n{e}")
+            return 1
 
     # 显示结果汇总
     cli.show_summary()
