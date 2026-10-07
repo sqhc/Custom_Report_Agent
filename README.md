@@ -1,5 +1,7 @@
 # 海关报关智能生成系统
 
+**简体中文** | [English](README.en.md)
+
 基于大语言模型的智能海关报关单生成系统，支持**本地 Ollama** 与**远程 OpenAI 兼容接口**（OpenAI / DeepSeek / Moonshot 等）两种后端，可随时切换。
 
 > 📖 面向 AI 助手与开发者的技术说明见 [AGENT.md](AGENT.md)。
@@ -13,6 +15,28 @@
 - 📝 **报告生成**: 生成专业的报关单、装箱单、发票等文档
 - 🔄 **智能纠错**: AI 辅助修正数据问题
 - 📈 **数据分析**: 统计分析和数据预览
+
+## 架构总览
+
+![双后端 LLM 架构](docs/architecture-preview.png)
+
+系统把"调用哪个大模型"收敛到单一位置：业务代码只依赖 `AIReasoner`，
+由 `get_llm_client()` 工厂根据 `LLM_BACKEND` 决定实例化 `OllamaClient`（本地）
+还是 `OpenAICompatibleClient`（远程）。因此在两种模式之间切换时，
+`AgentCoordinator` 及其上层调用方无需任何改动。
+
+- **交互式架构图**（可切换主题、缩放、搜索、聚焦、导出）：[docs/llm-backend-architecture.html](docs/llm-backend-architecture.html)
+- **架构图源文件**（Archify JSON，可修改后重新生成）：[docs/llm-backend-architecture.json](docs/llm-backend-architecture.json)
+
+```
+CLI 入口 → AgentCoordinator → AIReasoner → get_llm_client()
+                                              ├─ LLM_BACKEND=ollama → OllamaClient → Ollama 服务 (localhost:11434)
+                                              └─ LLM_BACKEND=openai → OpenAICompatibleClient → 远程 API
+```
+
+> ℹ️ 架构图由 [Archify](https://github.com/tt-a1i/archify) 生成。修改
+> `docs/llm-backend-architecture.json` 后需重新运行 `validate` 与 `deliver`
+> 才会更新 HTML（该 HTML 是自包含单文件，可直接用浏览器打开）。
 
 ## 快速开始
 
@@ -192,13 +216,20 @@ customs_agent/
 │   ├── test_llm_client.py       # LLM 客户端单元测试（无需联网）
 │   ├── test_llm_integration.py  # LLM 集成测试（需 openai 依赖）
 │   └── sample_data.csv
+├── docs/                   # 架构图
+│   ├── llm-backend-architecture.html      # 交互式架构图（自包含单文件）
+│   ├── llm-backend-architecture.json      # Archify 源文件
+│   └── architecture-preview.png           # README 中引用的静态预览图
 ├── cli.py                  # CLI 入口
 ├── requirements.txt        # 依赖
-├── README.md              # 用户文档
-├── AGENT.md               # 面向 AI/开发者的技术说明
-├── .env.example           # 环境变量示例
+├── README.md               # 用户文档（简体中文）
+├── README.en.md            # 用户文档（English）
+├── AGENT.md                # 面向 AI/开发者的技术说明
+├── CLAUDE.md               # Claude Code 指引
+├── .env.example            # 环境变量示例
+├── .gitignore              # Git 忽略规则
 ├── output/                # 输出目录
-├── logs/                  # 日志目录
+├── logs/                  # 日志目录（已 gitignore）
 └── templates/             # 模板目录
 ```
 
@@ -211,9 +242,20 @@ pytest tests/ -v
 # 运行特定测试
 pytest tests/test_agent.py -v
 
+# 仅运行 LLM 相关测试（全 mock，无需联网、无需安装 openai）
+pytest tests/test_llm_client.py -v
+
+# LLM 集成测试（需真实 openai SDK；未安装则自动跳过）
+pip install "openai>=1.0.0"
+pytest tests/test_llm_integration.py -v
+
 # 带覆盖率报告
 pytest tests/ --cov=src --cov-report=html
 ```
+
+> ⚠️ 已知既有失败（与 LLM 改造无关）：`pytest tests/ -q` 的基线为
+> **64 passed / 7 failed / 7 skipped**，失败均来自 `tests/test_data.py` 与
+> `tests/test_agent.py` 的既有缺陷。判断回归时以该基线为准。
 
 ## 使用示例
 

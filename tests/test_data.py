@@ -4,6 +4,7 @@ import pandas as pd
 from pathlib import Path
 import sys
 import json
+import tempfile
 
 # 添加项目路径
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -21,15 +22,18 @@ class TestDataLoader(unittest.TestCase):
     def setUp(self):
         """准备测试数据"""
         self.loader = DataLoader()
-        self.sample_csv = PROJECT_ROOT / "tests" / "sample_data.csv"
+
+        # 使用临时文件，避免覆盖 / 删除仓库中被跟踪的 tests/sample_data.csv
+        # （该文件供 run_test.py 使用，内容与本测试生成的不同）
+        self._temp_dir = tempfile.TemporaryDirectory()
+        self.sample_csv = Path(self._temp_dir.name) / "sample_data.csv"
 
         # 创建测试 CSV
         self._create_sample_csv()
 
     def tearDown(self):
-        """清理"""
-        if self.sample_csv.exists():
-            self.sample_csv.unlink()
+        """清理（只清理本测试创建的临时文件）"""
+        self._temp_dir.cleanup()
 
     def _create_sample_csv(self):
         """创建样本 CSV 文件"""

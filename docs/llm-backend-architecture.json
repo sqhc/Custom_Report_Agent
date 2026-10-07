@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "海关报关智能生成系统 · 双后端 LLM 架构",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1900,
+      880
+    ],
+    "views": [
+      {
+        "id": "main-path",
+        "label": "主链路",
+        "focus": [
+          "cli",
+          "coordinator",
+          "reasoner",
+          "factory"
+        ],
+        "note": "从 CLI 入口到客户端工厂：业务代码只依赖 AIReasoner，不关心后端类型。"
+      },
+      {
+        "id": "backend-switch",
+        "label": "后端切换",
+        "focus": [
+          "config",
+          "factory",
+          "ollama_client",
+          "openai_client"
+        ],
+        "note": "Config 读取 LLM_BACKEND 并完成校验，工厂据此实例化对应客户端。"
+      },
+      {
+        "id": "transports",
+        "label": "两种传输",
+        "focus": [
+          "ollama_client",
+          "ollama_svc",
+          "openai_client",
+          "remote_api"
+        ],
+        "note": "本地走 ollama 库，远程走 openai SDK，两者共用同一套调用接口。"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "cli",
+      "type": "frontend",
+      "label": "CLI 入口",
+      "sublabel": "cli.py --input",
+      "pos": [
+        60,
+        470
+      ],
+      "size": [
+        150,
+        76
+      ]
+    },
+    {
+      "id": "coordinator",
+      "type": "backend",
+      "label": "AgentCoordinator",
+      "sublabel": "六步工作流编排",
+      "pos": [
+        265,
+        470
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "reasoner",
+      "type": "backend",
+      "label": "AIReasoner",
+      "sublabel": "提示词封装 · 接口不变",
+      "pos": [
+        510,
+        470
+      ],
+      "size": [
+        180,
+        76
+      ]
+    },
+    {
+      "id": "factory",
+      "type": "backend",
+      "label": "get_llm_client()",
+      "sublabel": "按后端构造客户端",
+      "pos": [
+        745,
+        470
+      ],
+      "size": [
+        200,
+        76
+      ]
+    },
+    {
+      "id": "config",
+      "type": "security",
+      "label": "Config",
+      "sublabel": "环境变量 · validate_llm()",
+      "pos": [
+        740,
+        140
+      ],
+      "size": [
+        210,
+        76
+      ]
+    },
+    {
+      "id": "ollama_client",
+      "type": "backend",
+      "label": "OllamaClient",
+      "sublabel": "ollama 库",
+      "pos": [
+        1160,
+        280
+      ],
+      "size": [
+        180,
+        76
+      ]
+    },
+    {
+      "id": "openai_client",
+      "type": "backend",
+      "label": "OpenAICompatibleClient",
+      "sublabel": "openai SDK · 重试退避",
+      "pos": [
+        1160,
+        700
+      ],
+      "size": [
+        230,
+        76
+      ]
+    },
+    {
+      "id": "ollama_svc",
+      "type": "external",
+      "label": "Ollama 服务",
+      "sublabel": "localhost:11434",
+      "pos": [
+        1610,
+        280
+      ],
+      "size": [
+        185,
+        76
+      ]
+    },
+    {
+      "id": "remote_api",
+      "type": "cloud",
+      "label": "远程 API",
+      "sublabel": "OpenAI / DeepSeek / Moonshot",
+      "pos": [
+        1610,
+        700
+      ],
+      "size": [
+        195,
+        76
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "可切换 LLM 后端 · LLM_BACKEND",
+      "wraps": [
+        "ollama_client",
+        "openai_client",
+        "ollama_svc",
+        "remote_api"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "cli-to-coordinator",
+      "from": "cli",
+      "to": "coordinator"
+    },
+    {
+      "id": "coordinator-to-reasoner",
+      "from": "coordinator",
+      "to": "reasoner"
+    },
+    {
+      "id": "reasoner-to-factory",
+      "from": "reasoner",
+      "to": "factory"
+    },
+    {
+      "id": "config-to-factory",
+      "from": "config",
+      "to": "factory",
+      "label": "读取 + 校验",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        845,
+        340
+      ]
+    },
+    {
+      "id": "factory-to-ollama",
+      "from": "factory",
+      "to": "ollama_client",
+      "label": "LLM_BACKEND=ollama",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "factory-to-openai",
+      "from": "factory",
+      "to": "openai_client",
+      "label": "LLM_BACKEND=openai",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "ollama-to-service",
+      "from": "ollama_client",
+      "to": "ollama_svc",
+      "label": "HTTP /api/chat",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "openai-to-remote",
+      "from": "openai_client",
+      "to": "remote_api",
+      "label": "HTTPS /v1/chat/completions",
+      "fromSide": "right",
+      "toSide": "left"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "本地模式（默认）",
+      "items": [
+        "未设置 LLM_BACKEND 时使用 Ollama",
+        "OLLAMA_HOST / OLLAMA_MODEL 保持原值",
+        "行为与改造前完全一致"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "远程模式",
+      "items": [
+        "LLM_BACKEND=openai 时启用",
+        "OPENAI_API_KEY / OPENAI_BASE_URL / OPENAI_MODEL",
+        "429 与 5xx 重试，401/403/404 立即失败"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "兼容与约束",
+      "items": [
+        "AIReasoner 对外接口不变，另加 Reasoner 别名",
+        "openai 惰性导入，未安装不影响本地模式",
+        "legacy src/utils/llm_client.py 同样遵守该开关"
+      ]
+    }
+  ]
+}
