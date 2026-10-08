@@ -182,6 +182,7 @@ custom_agent_project/
 │       ├── hs_validator.py / compliance_checker.py / image_ocr.py
 │       └── constants.py / logger.py / cli_interface.py ...
 ├── agents/                    # 另一套「通用 Agent 框架」（与 src/agent 无关！）
+│   ├── AGENT.md               #   本包专属说明（详见该文件）
 │   ├── core/agent.py          #   使用 src.utils.llm_client
 │   └── tools/builtin/...      #   bash/file/web/code/memory/search 工具
 ├── tools/extract_table.py
@@ -193,6 +194,7 @@ custom_agent_project/
 - **`src/agent/`** —— 报关业务的**工作流编排**，由 `cli.py` 驱动。
 - **`agents/`** —— 一个**通用 Agent 框架**（工具调用循环、工具注册表），
   与报关流程相互独立；仅 `agents/core/agent.py` 复用了 `src.utils.llm_client`。
+  **详见 [agents/AGENT.md](agents/AGENT.md)。**
 
 修改 LLM 相关内容时，两者可能都需要考虑。
 
@@ -242,7 +244,10 @@ finally:
 ```bash
 pip install -r requirements.txt
 
-# 全部测试
+# 全部测试（含 agents/tools/test_tools.py）—— 77 passed / 7 skipped
+python3 -m pytest -q
+
+# 只跑 tests/ 目录（不含 agents/ 包内自测）—— 72 passed / 7 skipped
 python3 -m pytest tests/ -q
 
 # 只跑 LLM 相关（无需网络/无需安装 openai）
@@ -252,6 +257,9 @@ python3 -m pytest tests/test_llm_client.py -v
 pip install "openai>=1.0.0"
 python3 -m pytest tests/test_llm_integration.py -v
 
+# agents/ 多智能体框架自测
+python3 -m pytest agents/tools/test_tools.py -q
+
 # 端到端（需本地 Ollama 与 tests/sample_data.csv）
 python3 run_test.py
 
@@ -259,6 +267,9 @@ python3 run_test.py
 python3 cli.py --input data/sample.csv --output my_output/
 python3 cli.py --print-config          # 密钥自动脱敏
 ```
+
+> ⚠️ `pytest` 与 `pytest tests/` 的通过数不同（77 vs 72）：`agents/tools/test_tools.py`
+> 位于 `tests/` 之外，**只从仓库根运行 `pytest` 才会被收集**。判全集请用 `pytest -q`。
 
 ---
 

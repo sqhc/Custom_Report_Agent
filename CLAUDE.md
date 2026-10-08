@@ -77,14 +77,20 @@ export OPENAI_MODEL=deepseek-chat
 ### Run Test
 ```bash
 python run_test.py                                     # needs tests/sample_data.csv
-python3 -m pytest tests/ -q                            # full suite
+python3 -m pytest -q                                   # EVERYTHING (77 passed / 7 skipped)
+python3 -m pytest tests/ -q                            # tests/ only (72 passed / 7 skipped)
 python3 -m pytest tests/test_llm_client.py -v          # LLM unit tests (offline, no openai needed)
 python3 -m pytest tests/test_llm_integration.py -v     # real openai SDK; auto-skips if not installed
+python3 -m pytest agents/tools/test_tools.py -q        # agents/ framework self-test
 ```
 
-> ✅ The suite is green (**72 passed / 7 skipped / 0 failed**, ~1s). Tests use offline
-> stubs and never require a running Ollama. `tests/test_data.py` and `tests/test_agent.py`
-> write only to `tempfile` directories — they no longer touch tracked repo files.
+> ✅ The suite is green (**0 failed**, ~1s). Tests use offline stubs and never require a
+> running Ollama. `tests/test_data.py` and `tests/test_agent.py` write only to `tempfile`
+> directories — they no longer touch tracked repo files.
+>
+> ⚠️ `pytest -q` (77) and `pytest tests/ -q` (72) differ because `agents/tools/test_tools.py`
+> lives outside `tests/` and is only collected when pytest runs from the repo root.
+> Use bare `pytest -q` to judge the full suite.
 
 ### Run Production
 ```bash
@@ -120,6 +126,10 @@ pip install "openai>=1.0.0"    # only needed for LLM_BACKEND=openai
 - python-docx namespace handling requires full XML namespace URI for `w:ascii` font attribute (use `r'{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii'`)
 - Ollama timeout: 120s configured in `Config.OLLAMA_TIMEOUT`
 - `.llm_cache/` entries key on `model:prompt`, so switching backends reuses cache for identical model names — run `rm -rf .llm_cache/*` after switching
-- **Test suite is fully green:** `python3 -m pytest tests/ -q` → **72 passed / 7 skipped / 0 failed**
-  (~1s). The 7 skips are LLM integration tests (need `pip install "openai>=1.0.0"`).
-  All tests run offline via stubs; none require a live Ollama server.
+- **Test suite is fully green:** `python3 -m pytest -q` → **77 passed / 7 skipped / 0 failed**
+  (~1s; `pytest tests/ -q` alone gives 72/7/0). The 7 skips are LLM integration tests
+  (need `pip install "openai>=1.0.0"`). All tests run offline via stubs; none require a live
+  Ollama server.
+- `agents/` (the generic agent framework) has its own docs: **[agents/AGENT.md](agents/AGENT.md)**.
+  Note its `BaseTool.parameters` base default is a broken `dataclasses.field` — every builtin
+  tool overrides it, so always declare `parameters` explicitly in new tools.
